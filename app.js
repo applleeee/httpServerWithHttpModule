@@ -52,9 +52,28 @@ const reqListener = (req, res) => {
         res.writeHead(201, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ message: "userCreated" }));
       });
+    } else if (url === "/posts/upload") {
+      let body = "";
+
+      req.on("data", (data) => {
+        body += data;
+      });
+
+      req.on("end", () => {
+        const post = JSON.parse(body);
+
+        posts.push({
+          id: post.id,
+          title: post.title,
+          content: post.content,
+          userId: post.userId,
+        });
+        res.writeHead(201, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "postCreated" }));
+      });
     }
   }
-  console.log(users);
+  console.log(posts);
 };
 
 server.on("request", reqListener);
