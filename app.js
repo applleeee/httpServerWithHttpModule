@@ -31,13 +31,30 @@ const http = require("http");
 const server = http.createServer();
 
 const reqListener = (req, res) => {
-  const { method, body } = req;
-  console.log(body);
+  const { url, method } = req;
   if (method === "POST") {
-    users.push(body);
-    res.writeHead(201, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ message: "userCreated" }));
+    if (url === "/users/signup") {
+      let body = "";
+
+      req.on("data", (data) => {
+        body += data;
+      });
+
+      req.on("end", () => {
+        const user = JSON.parse(body);
+
+        users.push({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          password: user.password,
+        });
+        res.writeHead(201, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ message: "userCreated" }));
+      });
+    }
   }
+  console.log(users);
 };
 
 server.on("request", reqListener);
