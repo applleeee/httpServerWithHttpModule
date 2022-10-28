@@ -12,6 +12,7 @@ const users = [
     password: "password",
   },
 ];
+
 const posts = [
   {
     id: 1,
@@ -24,6 +25,20 @@ const posts = [
     title: "HTTP의 특성",
     content: "Request/Response와 Stateless!!",
     userId: 1,
+  },
+  {
+    userID: 3,
+    userName: "new user 1",
+    postingId: 3,
+    postingImageUrl: "내용 1",
+    postingContent: "sampleContent3",
+  },
+  {
+    userID: 4,
+    userName: "new user 2",
+    postingId: 4,
+    postingImageUrl: "내용 2",
+    postingContent: "sampleContent4",
   },
 ];
 
@@ -73,7 +88,12 @@ const reqListener = (req, res) => {
       });
     }
   }
-  console.log(posts);
+  if (method === "GET") {
+    if (url === "/posts/get") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ data: posts }));
+    }
+  }
 };
 
 server.on("request", reqListener);
